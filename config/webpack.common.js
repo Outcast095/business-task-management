@@ -15,24 +15,25 @@ export default {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    // Вот эта часть уже делает то, что вы хотели — настраивает пути для Webpack
     alias: { '@': path.resolve(__dirname, '../src') }
   },
   module: {
     rules: [
       {
-      test: /\.(ts|tsx|js|jsx)$/,
-      exclude: /node_modules/,
-      use: { 
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            '@babel/preset-env',
-            ['@babel/preset-react', { runtime: 'automatic' }],
-            '@babel/preset-typescript',
-          ],
+        test: /\.(ts|tsx|js|jsx)$/,
+        exclude: /node_modules/,
+        use: { 
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              ['@babel/preset-react', { runtime: 'automatic' }],
+              '@babel/preset-typescript',
+            ],
+          },
         },
       },
-    },
       {
         test: /\.(png|svg|jpg|jpeg|gif|woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
@@ -43,17 +44,10 @@ export default {
     new HtmlWebpackPlugin({ template: './src/index.html' }),
     new ForkTsCheckerWebpackPlugin(),
     new Dotenv({
-      // Поднимаемся на уровень выше из папки config в корень
       path: path.resolve(__dirname, '../.env'), 
       safe: true,
       systemvars: true
     }),
   ],
 
-  "compilerOptions": {
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["src/*"]
-  }
-}
 };
