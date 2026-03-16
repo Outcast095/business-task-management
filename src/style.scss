@@ -2,3 +2,10 @@
   background-color: #f0f0f0;
   padding: 20px;
 }
+
+.my-custom-image {
+  width: 200px;
+  height: 250px;
+  /* Можно добавить фон, чтобы пустые места при objectFit: contain не были прозрачными */
+  background-color: #f0f0f0; 
+}
