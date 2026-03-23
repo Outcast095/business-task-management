@@ -1,21 +1,33 @@
+// это файл 'Pagination.module.scss
+// расположен по адресу src/client/components/pagination/Pagination.module.scss
+
+
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
 .paginationWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include m.flex-center;
   gap: 15px;
   margin-top: 30px;
-  padding: 10px;
 }
 
 .pageInfo {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-  font-family: sans-serif;
-  min-width: 80px;
-  text-align: center;
+  color: v.$text-primary;
+  font-weight: v.$font-weight-semibold;
   
   span {
-    color: #00e676; // Твой акцентный зеленый
-    text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+    color: v.$color-green;
+    @include m.glow(v.$color-green, 0.3);
   }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, v.$color-blue, v.$color-green);
+  border-radius: 50%;
+  @include m.flex-center;
+  font-size: 0.8rem;
+  font-weight: v.$font-weight-bold;
+  color: #000;
 }

@@ -1,0 +1,72 @@
+// это файл EditPage.module.scss,
+// расположен по адресу src/client/pages/editPage/EditPage.module.scss
+
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  @include m.flex-center;
+  padding: 104px 20px 40px; // Добавил отступ сверху для хедера, как в TodosPage
+}
+
+.editForm {
+  @include m.glass(0.05, 12px);
+  padding: 30px;
+  border-radius: v.$radius-card;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h1 { 
+    margin-bottom: 10px; 
+    font-size: 1.5rem; 
+    color: v.$text-primary;
+    font-weight: v.$font-weight-bold;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label { 
+    font-size: 0.9rem; 
+    color: v.$text-secondary; 
+  }
+  
+  input {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid v.$glass-border;
+    border-radius: v.$radius-main;
+    color: v.$text-primary;
+    transition: v.$transition-base;
+
+    &:focus { 
+      outline: none; 
+      border-color: v.$color-blue;
+      @include m.glow(v.$color-blue, 0.2);
+    }
+  }
+}
+
+.actions { 
+  display: flex; 
+  gap: 12px; 
+  margin-top: 10px; 
+}
+
+.success { 
+  color: v.$color-green; 
+  text-align: center; 
+  @include m.glow(v.$color-green, 0.3);
+}
+
+.error { 
+  color: v.$color-red; 
+  text-align: center; 
+  @include m.glow(v.$color-red, 0.3);
+}

@@ -9,7 +9,7 @@ import { TodosPage } from './pages/todos/TodosPage';
 import { LandingPage } from './pages/landing/LandingPage';
 import { AuthPage } from './pages/auth/AuthPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
-import { EditPage } from './pages/уditPage/EditPage';
+import { EditPage } from './pages/editPage/EditPage';
 import { AboutPage } from './pages/about/AboutPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PrivateRoute, PublicRoute } from './components/authGuards/AuthGuards'; 

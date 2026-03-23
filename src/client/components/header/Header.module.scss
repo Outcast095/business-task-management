@@ -1,19 +1,29 @@
+// это файл 'Header.module.scss
+// расположен по адресу src/client/components/header/Header.module.scss
+
+
+
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
 .header {
-  position: fixed; // Сделаем fixed, чтобы он точно не дергался
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  height: 64px; // Фиксированная высота
   background: rgba(13, 13, 13, 0.7);
   backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid v.$glass-border;
+  @include m.flex-center;
 }
 
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,19 +36,19 @@
   text-decoration: none;
   font-weight: 800;
   font-size: 1.1rem;
-  color: #fff;
+  color: v.$text-primary;
   letter-spacing: 0.5px;
 
   span {
-    color: #00e676;
+    color: v.$color-green;
   }
 
   .logoDot {
     width: 8px;
     height: 8px;
-    background: #00e676;
+    background: v.$color-green;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
+    @include m.glow(v.$color-green, 0.5);
   }
 }
 
@@ -47,23 +57,23 @@
   background: rgba(255, 255, 255, 0.04);
   padding: 4px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid v.$glass-border;
 
   a {
-    color: #a0a0a0;
+    color: v.$text-secondary;
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 500;
     padding: 8px 16px;
     border-radius: 8px;
-    transition: all 0.2s ease;
+    transition: v.$transition-base;
 
     &:hover {
-      color: #fff;
+      color: v.$text-primary;
     }
 
     &.active {
-      color: #fff;
+      color: v.$text-primary;
       background: rgba(255, 255, 255, 0.08);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
@@ -84,42 +94,34 @@
 
 .userName {
   font-size: 0.85rem;
-  color: #fff;
+  color: v.$text-primary;
   font-weight: 500;
 }
 
 .avatar {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #00b0ff, #00e676);
+  background: linear-gradient(135deg, v.$color-blue, v.$color-green);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include m.flex-center;
   font-size: 0.8rem;
   font-weight: 700;
   color: #000;
 }
 
-.divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
 .logoutBtn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ff5252;
+  border: 1px solid rgba(v.$color-red, 0.2);
+  color: v.$color-red;
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: v.$transition-base;
 
   &:hover {
-    background: rgba(255, 82, 82, 0.1);
-    border-color: rgba(255, 82, 82, 0.3);
+    background: rgba(v.$color-red, 0.1);
+    border-color: v.$color-red;
   }
 }

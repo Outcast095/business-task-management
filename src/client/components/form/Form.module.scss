@@ -1,106 +1,91 @@
 // это файл 'Form.module.scss
 // расположен по адресу src/client/components/form/Form.module.scss
 
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
 .form {
-  display: flex;
+  @include m.flex-center;
+  @include m.glass(0.05, 12px);
   gap: 16px;
   margin-bottom: 40px;
   width: 100%;
   max-width: 600px;
   padding: 20px;
-  
-  // Эффект стекла для всей формы
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
+  border-radius: v.$radius-card;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   .inputWrapper {
-  position: relative; // База для абсолютного позиционирования крестика
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
 
   .input {
     flex: 1;
     width: 100%; 
-    padding: 14px 45px 14px 20px; //
-    background: rgba(255, 255, 255, 0.05); // Супер-прозрачный
-    border: 1px solid transparent; // Граница только при фокусе
-    border-radius: 12px;
+    padding: 14px 45px 14px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: v.$radius-main;
     font-size: 16px;
-    color: var(--text-main);
-    transition: all 0.3s;
+    color: v.$text-primary;
+    transition: v.$transition-base;
 
     &::placeholder {
-      color: var(--text-secondary);
+      color: v.$text-muted;
     }
 
     &:focus {
       outline: none;
-      border-color: var(--accent-blue);
+      border-color: v.$color-blue;
       background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+      @include m.glow(v.$color-blue, 0.2);
     }
   }
 
   .addButton {
     padding: 14px 30px;
-    background: var(--accent-blue);
-    color: #1e1e2f; 
+    background: v.$color-blue;
+    color: #000; // Темный текст на светлом фоне кнопки
     border: none;
-    border-radius: 12px;
-    font-weight: 700;
+    border-radius: v.$radius-main;
+    font-weight: v.$font-weight-bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: v.$transition-base;
 
     &:hover {
-      // Вместо lighten() используем нативный CSS фильтр
-      filter: brightness(1.15); // Увеличиваем яркость на 15%
+      filter: brightness(1.15);
       transform: translateY(-2px);
+      @include m.glow(v.$color-blue, 0.4);
     }
 
-    &:active {
-      filter: brightness(0.95); // Немного притемняем при клике для отклика
-      transform: translateY(1px);
-    }
-
-    // Добавим стиль для заблокированной кнопки (когда инпут пустой)
     &:disabled {
       opacity: 0.5;
-      cursor: not-allowed;
       filter: grayscale(1);
+      cursor: not-allowed;
       transform: none;
     }
   }
 
   .clearButton {
+    @include m.flex-center;
     width: 30px;
     height: 30px;
-  position: absolute;
-  right: 15px;
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 10px;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    color: v.$text-muted;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: v.$transition-base;
 
-  &:hover {
-    color: var(--accent-blue);
-    background: rgba(255, 255, 255, 0.1);
+    &:hover {
+      color: v.$color-blue;
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
-
-  &:active {
-    transform: scale(0.9);
-  }
-}
 }

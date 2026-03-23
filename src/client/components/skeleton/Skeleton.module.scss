@@ -1,16 +1,21 @@
+// это файл Skeleton.module.scss
+// расположен по адресу src/client/components/skeleton/Skeleton.module.scss
+
+
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
 .skeletonWrapper {
-  display: flex;
-  align-items: center;
+  @include m.flex-center;
+  justify-content: flex-start;
   gap: 15px;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  @include m.glass(0.03, 4px);
+  border-radius: v.$radius-main;
   margin-bottom: 10px;
   position: relative;
   overflow: hidden;
 
-  // Анимация блика
   &::after {
     content: "";
     position: absolute;
@@ -21,7 +26,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.05),
+      rgba(v.$text-primary, 0.05),
       transparent
     );
     animation: shimmer 1.5s infinite;
@@ -31,19 +36,17 @@
 .square {
   width: 24px;
   height: 24px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(v.$text-primary, 0.1);
   border-radius: 8px;
 }
 
 .line {
   height: 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(v.$text-primary, 0.1);
   border-radius: 4px;
   flex: 1;
 }
 
 @keyframes shimmer {
-  100% {
-    left: 100%;
-  }
+  100% { left: 100%; }
 }
