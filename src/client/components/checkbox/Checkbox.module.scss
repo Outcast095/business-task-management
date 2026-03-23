@@ -2,13 +2,14 @@
 // расположен по адресу src/client/components/checkbox/Checkbox.module.scss
 
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .checkboxWrapper {
-  display: flex;
-  align-items: center;
+  @include m.flex-center;
   cursor: pointer;
   position: relative;
   padding: 4px;
+  justify-content: flex-start; // Чтобы текст был слева-направо
 
   .hiddenInput {
     position: absolute;
@@ -17,44 +18,37 @@
     height: 0;
   }
 
-  // БАЗОВОЕ СОСТОЯНИЕ
   .customCheck {
     width: 24px;
     height: 24px;
-    border: 2px solid v.$glass-border; 
     border-radius: 8px;
-    background: v.$glass-bg;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: v.$transition-base; 
+    transition: v.$transition-base;
+    
+    @include m.glass(0.05, 8px); // Базовое стекло для квадратика
+    @include m.flex-center;
 
     &::after {
       content: "";
       width: 6px;
       height: 11px;
-      border: solid v.$color-green; 
+      border: solid v.$color-green;
       border-width: 0 3px 3px 0;
       transform: rotate(45deg) scale(0);
       transition: transform 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46);
     }
   }
 
-  // ПРИ НАВЕДЕНИИ
   &:hover .customCheck {
-    border-color: rgba(v.$color-green, 0.5); 
+    border-color: rgba(v.$color-green, 0.5);
     background: rgba(v.$color-green, 0.05);
   }
 
-  // СОСТОЯНИЕ CHECKED (МАГИЯ ЗЕЛЕНОГО СВЕЧЕНИЯ)
   .hiddenInput:checked ~ .customCheck {
-    background: rgba(v.$color-green, 0.15);
+    background: rgba(v.$color-green, 0.1);
     border-color: v.$color-green;
     
-    // Мощный неон через переменную свечения
-    box-shadow: 
-      0 0 15px v.$color-green-glow, 
-      inset 0 0 5px rgba(v.$color-green, 0.3);
+    // Используем миксин свечения для галочки
+    @include m.glow(v.$color-green, 0.5);
 
     &::after {
       transform: rotate(45deg) scale(1);

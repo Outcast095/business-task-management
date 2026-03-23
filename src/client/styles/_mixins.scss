@@ -1,5 +1,40 @@
+// это файл '_mixins.scss
+// расположен по адресу src/client/styles/_mixins.scss
+
+@use './variables' as v;
+
+// 1. Главный миксин для "Стеклянного эффекта"
+// Мы добавляем параметры по умолчанию, но их можно менять при вызове
+@mixin glass($opacity: 0.05, $blur: 12px, $border-opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, $border-opacity);
+}
+
 @mixin glass-effect {
   background: v.$glass-bg;
   border: 1px solid v.$glass-border;
   backdrop-filter: v.$glass-blur;
+}
+
+// 2. Миксин для неонового свечения (Glow)
+@mixin glow($color, $intensity: 0.4) {
+  box-shadow: 0 0 15px rgba($color, $intensity), 
+              inset 0 0 10px rgba($color, ($intensity / 2));
+  text-shadow: 0 0 8px rgba($color, $intensity);
+}
+
+// 3. Миксин для быстрого центрирования (Flex)
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 4. Миксин для адаптивности (Медиа-запросы)
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content; // Сюда подставится код, который ты напишешь внутри миксина
+  }
 }

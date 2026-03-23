@@ -2,24 +2,19 @@
 // src/client/components/button/Button.module.scss
 
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .glassButton {
   padding: 10px 20px;
-  border-radius: v.$radius-main; // Теперь добавляем префикс v.
-  cursor: pointer;
+  border-radius: v.$radius-main;
   font-weight: v.$font-weight-semibold;
   font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  border: 1px solid v.$glass-border;
-  background: v.$glass-bg;
-  color: v.$text-primary;
-  backdrop-filter: v.$glass-blur;
-  -webkit-backdrop-filter: v.$glass-blur;
-  
+  cursor: pointer;
   transition: v.$transition-glow;
+  
+  // Применяем миксины
+  @include m.glass(0.05, 10px);
+  @include m.flex-center;
 
   &:active {
     transform: scale(0.95);
@@ -27,39 +22,32 @@
 
   &:disabled {
     opacity: 0.4;
-    cursor: not-allowed;
     filter: grayscale(1);
     transform: none !important;
-    box-shadow: none !important;
     pointer-events: none;
   }
 }
 
 .blue {
-  border-color: rgba(v.$color-blue, 0.4);
   color: v.$color-blue;
-  background: rgba(v.$color-blue, 0.1);
-  
-  box-shadow: 0 0 15px rgba(v.$color-blue, 0.2), 
-              inset 0 0 10px rgba(v.$color-blue, 0.05);
-  text-shadow: 0 0 8px rgba(v.$color-blue, 0.4);
+  @include m.glow(v.$color-blue, 0.3);
 
   &:hover {
     background: rgba(v.$color-blue, 0.2);
     border-color: v.$color-blue;
-    box-shadow: 0 0 25px v.$color-blue-glow;
+    @include m.glow(v.$color-blue, 0.6); // Усиливаем свечение
     color: v.$text-primary;
   }
 }
 
 .red {
-  border-color: rgba(v.$color-red, 0.3);
   color: v.$color-red;
+  @include m.glow(v.$color-red, 0.2);
 
   &:hover {
     background: rgba(v.$color-red, 0.15);
     border-color: v.$color-red;
-    box-shadow: 0 0 20px v.$color-red-glow;
+    @include m.glow(v.$color-red, 0.5);
     color: v.$text-primary;
   }
 }
@@ -68,12 +56,9 @@
   background: transparent;
   border-color: transparent;
   color: v.$text-muted;
-  box-shadow: none;
-  text-shadow: none;
 
   &:hover {
     color: v.$text-secondary;
-    background: v.$glass-bg;
-    border-color: v.$glass-border;
+    @include m.glass(0.08, 5px); // Легкое проявление стекла при наведении
   }
 }
