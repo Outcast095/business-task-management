@@ -1,0 +1,5 @@
+@mixin glass-effect {
+  background: v.$glass-bg;
+  border: 1px solid v.$glass-border;
+  backdrop-filter: v.$glass-blur;
+}

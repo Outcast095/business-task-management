@@ -1,3 +1,6 @@
+/// это файл 'webpack.prod.js
+/// он расположен по адресу config/webpack.prod.js
+
 import { merge } from 'webpack-merge';
 import common from './webpack.common.js';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -26,7 +29,22 @@ export default merge(common, {
     rules: [
       {
         test: /\.(s[ac]ss|css)$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader, 
+          {
+            loader: 'css-loader',
+            options: {
+              esModule: false, // ДОБАВИТЬ ЭТО
+              modules: {
+                auto: true,
+                localIdentName: '[hash:base64:8]',
+                exportLocalsConvention: 'camelCase', // ДОБАВИТЬ ЭТО
+              },
+            },
+          },
+          'postcss-loader',
+          'sass-loader',
+        ],
       }
     ]
   }

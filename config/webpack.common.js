@@ -1,3 +1,7 @@
+/// это файл 'webpack.common.js
+/// он расположен по адресу config/webpack.common.js
+
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -8,9 +12,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  entry: './src/index.tsx',
+  entry: path.resolve(__dirname, '../src/client/index.tsx'),
   output: {
     path: path.resolve(__dirname, '../dist'),
+    filename: '[name].bundle.js', 
+    publicPath: '/',              
     clean: true,
   },
   resolve: {
@@ -41,7 +47,7 @@ export default {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new HtmlWebpackPlugin({ template: path.resolve(__dirname, '../src/client/index.html') }),
     new ForkTsCheckerWebpackPlugin(),
     new Dotenv({
       path: path.resolve(__dirname, '../.env'), 

@@ -1,0 +1,41 @@
+// это файл 'EmptyState.module.scss
+// расположен по адресу src/client/components/emptyState/EmptyState.module.scss
+
+@use '../../styles/variables' as v;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  
+  // Используем прозрачность и размытие из системы
+  background: rgba(v.$text-primary, 0.02); 
+  border: 1px dashed v.$glass-border;
+  border-radius: v.$radius-card; // Делаем скругление как у карточек
+  margin-top: 20px;
+  backdrop-filter: v.$glass-blur;
+}
+
+.icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 10px rgba(v.$text-primary, 0.1));
+}
+
+.title {
+  color: v.$text-primary;
+  font-family: v.$font-main;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  font-weight: v.$font-weight-semibold;
+}
+
+.subtitle {
+  color: v.$text-secondary; // Используем вторичный текст
+  font-size: 0.9rem;
+  font-weight: v.$font-weight-regular;
+}

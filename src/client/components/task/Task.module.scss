@@ -1,0 +1,73 @@
+// Task.module.scss
+
+.taskCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px; // Гарантированный зазор между чекбоксом, текстом и кнопкой
+  
+  width: 100%;
+  max-width: 600px;
+  padding: 16px 24px;
+  margin-bottom: 12px;
+  
+  // Эффект Glassmorphism
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  
+  // Границы и тени для объема
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  // Магия Flexbox для длинного текста
+  flex: 1;      // Занимает всё доступное пространство
+  min-width: 0; // Ключевое свойство! Позволяет тексту сжиматься внутри flex-контейнера
+  
+  span {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    
+    // Решение проблемы "слипания" и вылета текста
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;      // Текст в одну строку
+    overflow: hidden;         // Прячем то, что не влезло
+    text-overflow: ellipsis;  // Добавляем красивое троеточие (...)
+    
+    transition: all 0.3s ease;
+  }
+
+  // Стили для выполненной задачи
+  &.completed {
+    span {
+      opacity: 0.5;
+      text-decoration: line-through;
+      filter: grayscale(1);
+    }
+  }
+}
+
+// Если кнопка Удалить находится внутри .taskCard, убедись, что она не сжимается
+// Это можно прописать в Button.module.scss или здесь как переопределение
+button {
+  flex-shrink: 0 !important; // Запрещаем кнопке менять размер
+}

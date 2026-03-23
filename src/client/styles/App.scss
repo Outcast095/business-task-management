@@ -1,0 +1,75 @@
+// 1. Импорт шрифта всегда сверху
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+// 2. Глобальные переменные (объявляем ПЕРЕД использованием)
+:root {
+  --bg-main: #1e1e2f;
+  --bg-gradient: radial-gradient(circle at 20% 20%, #4a148c 0%, transparent 40%),
+                  radial-gradient(circle at 80% 80%, #00d2ff 0%, transparent 40%),
+                  #1e1e2f; 
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(12px);
+  --text-main: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-blue: #00d2ff;
+  --accent-green: #00e676;
+  --font-main: 'Inter', sans-serif;
+}
+
+// 3. Базовые стили страницы
+* {
+  box-sizing: border-box; // Чтобы паддинги не раздували ширину элементов
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  
+  // Фон
+  background: var(--bg-gradient);
+  background-attachment: fixed; // Чтобы пятна света не уезжали при скролле
+  background-color: var(--bg-main);
+  
+  // Типографика
+  font-family: var(--font-main);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  display: flex;
+  justify-content: center;
+}
+
+// App.scss
+
+// 1. Определяем саму анимацию
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); // Начинаем чуть ниже
+    filter: blur(10px);         // Добавим легкое размытие в начале для стиля
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+// 2. Применяем её к контейнеру
+.appContainer {
+  width: 100%;
+  max-width: 800px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  // Параметры анимации:
+  // 0.8s — длительность
+  // ease-out — плавное замедление к концу
+  // forwards — чтобы контейнер остался в конечном состоянии (не исчез)
+  animation: fadeInUp 0.8s ease-out forwards;
+}

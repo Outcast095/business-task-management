@@ -1,0 +1,30 @@
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  // 64px (высота хедера) + 40px (желаемый отступ)
+  padding: 104px 20px 40px; 
+  display: flex;
+  flex-direction: column;
+  gap: 32px; // Увеличили зазор между элементами (Title, Form, List)
+}
+
+.header {
+  // Если здесь будет заголовок "Fullstack Tasks" (внутри компонента Title),
+  // этот блок создаст для него правильное позиционирование
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listWrapper {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
