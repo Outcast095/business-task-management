@@ -1,4 +1,6 @@
-// src/server/index.ts
+// это файл index.ts
+// расположен по адресу src/server/index.ts
+
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -27,6 +29,7 @@ app.use(express.json());
 // (Папка dist находится на два уровня выше относительно этого файла: src -> server -> index.ts)
 app.use(express.static(path.resolve(__dirname, '../../dist')));
 
+app.use('/uploads', express.static(path.resolve(__dirname, 'uploads')));
 // 3. API Роуты
 app.use('/api/tasks', taskRoutes);
 app.use('/api/auth', authRoutes);

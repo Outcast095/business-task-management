@@ -7,6 +7,9 @@ node_modules/
 dist/
 build/
 
+src/server/uploads/*
+!src/server/uploads/.gitkeep
+
 # Секретные данные (КРИТИЧЕСКИ ВАЖНО)
 .env
 .env.local

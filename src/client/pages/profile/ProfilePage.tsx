@@ -6,19 +6,22 @@ import { useProfile } from '../../hooks/useProfile';
 import { Button } from '../../components/button/Button';
 import styles from './ProfilePage.module.scss';
 import { useNavigate } from 'react-router-dom';
-
-
+import { log } from 'console';
 
 export const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, stats, loading, logout } = useProfile();
 
+  console.log('ProfilePage: user', user);
+
+  /*
+  'ProfilePage: user', user: {id: 2, name: 'Magomed', email: 'magomed@gmail.com'}
+  */
   if (loading) return (
     <div className={styles.container}>
       <div className={styles.loader}>Загрузка профиля...</div>
     </div>
   );
-
 
   if (!user) {
     return (
@@ -39,15 +42,32 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
-  const userInitial = user?.name.charAt(0).toUpperCase();
+  // Определяем букву для фоллбэка
+  const userInitial = user.name ? user.name.charAt(0).toUpperCase() : '?';
 
   return (
     <div className={styles.container}>
-      <div className={styles.avatar}>{userInitial}</div>
+      {/* СЕКЦИЯ АВАТАРА */}
+      <div className={styles.avatar}>
+        {user.avatar_url ? (
+          <img 
+            src={user.avatar_url} 
+            alt={user.name} 
+            className={styles.profileImg}
+            // Если картинка не прогрузится (ошибка 404), покажем букву
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as HTMLImageElement).parentElement!.innerText = userInitial;
+            }}
+          />
+        ) : (
+          userInitial
+        )}
+      </div>
       
       <div className={styles.info}>
-        <h1>{user?.name}</h1>
-        <p>{user?.email}</p>
+        <h1>{user.name}</h1>
+        <p>{user.email}</p>
       </div>
       
       <div className={styles.statsGrid}>

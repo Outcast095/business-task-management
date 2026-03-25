@@ -2,21 +2,22 @@
 // расположен по адресу src/server/routes/auth.routes.ts
 
 import { Router } from 'express';
-import { signUp,  signIn} from '../controllers/auth.controller.js';
+import { signUp, signIn } from '../controllers/auth.controller.js';
 import pool from '../database/db.js';
 
 const router = Router();
 
-
 router.post('/register', signUp);
 router.post('/login', signIn); 
 
-// ДОБАВЛЯЕМ ЭТОТ РОУТ:
+// ИСПРАВЛЕННЫЙ РОУТ:
 router.get('/me/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    
+    // Добавили avatar_url в SELECT
     const userQuery = await pool.query(
-      'SELECT id, name, email FROM users WHERE id = $1',
+      'SELECT id, name, email, avatar_url FROM users WHERE id = $1',
       [userId]
     );
 

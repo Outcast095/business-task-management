@@ -99,14 +99,20 @@
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, v.$color-blue, v.$color-green);
+  width: 35px; // или твой размер
+  height: 35px;
   border-radius: 50%;
-  @include m.flex-center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #000;
+  overflow: hidden; // чтобы картинка не вылезала за края круга
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1); // фон для буквы
+  
+  .avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // растягивает фото без искажений
+  }
 }
 
 .logoutBtn {

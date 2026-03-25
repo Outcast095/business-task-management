@@ -1,13 +1,16 @@
 // файл useProfile.ts
 // расположен src/client/hooks/useProfile.ts
 
+// src/client/hooks/useProfile.ts
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface UserData {
-  id: number | string;
+export interface UserData {
+  id: number;
   name: string;
   email: string;
+  avatar_url?: string; // Поле теперь официально существует в типе!
 }
 
 interface UserStats {
@@ -25,7 +28,13 @@ export const useProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const savedUserRaw = localStorage.getItem('user');
+        if (!savedUserRaw) {
+          navigate('/auth');
+          return;
+        }
+
+        const savedUser = JSON.parse(savedUserRaw);
         const userId = savedUser.id;
 
         if (!userId) {
@@ -33,6 +42,7 @@ export const useProfile = () => {
           return;
         }
 
+        // Запрашиваем данные пользователя и статистику параллельно
         const [userRes, statsRes] = await Promise.all([
           fetch(`http://localhost:5000/api/auth/me/${userId}`),
           fetch(`http://localhost:5000/api/tasks/stats/${userId}`)
@@ -42,16 +52,19 @@ export const useProfile = () => {
           throw new Error('Ошибка при загрузке данных профиля');
         }
 
-        const userData = await userRes.json();
-        const statsData = await statsRes.json();
+        const userData: UserData = await userRes.json();
+        const statsData: UserStats = await statsRes.json();
 
+        // Устанавливаем данные в стейт
         setUser(userData);
         setStats(statsData);
+
+        // Обновляем localStorage свежими данными (включая новый avatar_url)
+        localStorage.setItem('user', JSON.stringify(userData));
+
       } catch (err: any) {
         setError(err.message);
         console.error("Profile fetch error:", err);
-        // Если данные не загрузились (например, юзер удален), разлогиниваем
-        // Но можно оставить на усмотрение компонента
       } finally {
         setLoading(false);
       }

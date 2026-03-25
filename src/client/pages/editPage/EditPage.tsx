@@ -1,11 +1,15 @@
-// src/client/pages/edit/EditPage.tsx
+// это файл EditPage.tsx
+// расположен по адресу src/client/pages/edit/EditPage.tsx
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEdit } from '../../hooks/useEdit';
 import { Button } from '../../components/button/Button';
 import styles from './EditPage.module.scss';
+import { DragDrop } from '@/client/components/dragDrop/DragDrop';
 
 export const EditPage: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
   const { userId } = useParams();
   const navigate = useNavigate();
   const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -21,7 +25,7 @@ export const EditPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateUserInfo(formData);
+    updateUserInfo(formData, file || undefined);
   };
 
   return (
@@ -46,12 +50,11 @@ export const EditPage: React.FC = () => {
         </div>
 
         <div className={styles.field}>
-          <label>URL Аватара</label>
-          <input 
-            value={formData.avatar_url} 
-            onChange={e => setFormData({...formData, avatar_url: e.target.value})}
-            placeholder="https://example.com/photo.jpg"
-          />
+            <label>Аватар</label>
+            <DragDrop 
+              onFileSelect={(selectedFile) => setFile(selectedFile)} 
+              initialPreview={formData.avatar_url} 
+            />
         </div>
 
         <div className={styles.field}>
