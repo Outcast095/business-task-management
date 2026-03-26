@@ -1,0 +1,75 @@
+// src/client/components/modal/ModalWrapper.module.scss
+@import "../../styles/mixins.scss"; // Импорт твоих миксинов
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); // Эффект размытия фона
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--bg-card); // Предполагаю наличие переменных темы
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  animation: slideUp 0.3s ease;
+  
+  // Применяем стеклянный эффект через миксин, если он есть
+  //@include glass-effect; 
+}
+
+// Размеры
+.sm { width: 320px; }
+.md { width: 500px; }
+.lg { width: 800px; }
+.auto { width: auto; max-width: 90%; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--danger-color);
+  }
+}
+
+// Анимации
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
