@@ -1,12 +1,27 @@
 // это файл editRoutes.ts
 // расположен по адресу src/server/routes/editRoutes.ts
 
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { updateProfile } from '../controllers/edit.controller.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
 
 const router = Router();
+
+// Защищаем роуты редактирования
+router.use(authenticateToken);
+
+// Middleware для проверки прав
+const checkOwnership = (req: Request, res: Response, next: Function) => {
+  const { userId } = req.params;
+  const loggedInUserId = (req as any).user.userId;
+
+  if (userId && Number(userId) !== loggedInUserId) {
+    return res.status(403).json({ error: 'У вас нет прав для изменения этого профиля.' });
+  }
+  next();
+};
 
 // 1. Настраиваем хранилище
 const storage = multer.diskStorage({
@@ -40,6 +55,6 @@ const upload = multer({
  * как управление попадет в updateProfile.
  * В контроллере файл будет доступен как req.file
  */
-router.put('/:userId', upload.single('avatar'), updateProfile); 
+router.put('/:userId', checkOwnership, upload.single('avatar'), updateProfile); 
 
 export default router;

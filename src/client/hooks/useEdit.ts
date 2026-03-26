@@ -1,6 +1,8 @@
 // это файл useEdit.ts
 // расположен по адресу src/client/hooks/useEdit.ts
 
+// src/client/hooks/useEdit.ts
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +10,7 @@ interface formDataType {
   name: string; 
   email?: string; 
   password?: string; 
-  avatar_url?: string; // Старый URL (на случай, если файл не меняли)
+  avatar_url?: string; // Текущий URL аватара из базы
 }
 
 export const useEdit = (userId: string | undefined) => {
@@ -23,43 +25,67 @@ export const useEdit = (userId: string | undefined) => {
     setStatus('idle');
 
     try {
-      // 1. Создаем объект FormData вместо обычного объекта
+      const token = localStorage.getItem('token');
+
+      // 1. Создаем объект FormData для отправки файлов и текста
       const data = new FormData();
       
-      // 2. Наполняем его текстовыми данными
+      // 2. Наполняем его данными из формы
       data.append('name', formData.name);
       if (formData.email) data.append('email', formData.email);
-      if (formData.password) data.append('password', formData.password);
       
-      // 3. Добавляем файл, если он был выбран в DragDrop
+      // Пароль добавляем только если он не пустой
+      if (formData.password && formData.password.trim() !== '') {
+        data.append('password', formData.password);
+      }
+      
+      // 3. Логика файла: если выбрали новый — шлем его, если нет — шлем старую ссылку
       if (file) {
-        // Ключ 'avatar' должен совпадать с тем, что мы пропишем в Multer на бэкенде
         data.append('avatar', file); 
       } else if (formData.avatar_url) {
-        // Если нового файла нет, отправляем старую ссылку, чтобы не затереть её в БД
         data.append('avatar_url', formData.avatar_url);
       }
 
+      // 4. Отправляем запрос с токеном авторизации
       const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
         method: 'PUT',
-        // ВНИМАНИЕ: Мы убрали заголовок 'Content-Type'. 
-        // Браузер сам добавит multipart/form-data и сгенерирует Boundary.
+        headers: {
+          // ВАЖНО: 'Content-Type' НЕ УКАЗЫВАЕМ, браузер сам поставит multipart/form-data
+          'Authorization': `Bearer ${token}`
+        },
         body: data, 
       });
 
-      if (!response.ok) throw new Error('Ошибка при обновлении');
+      // 5. Проверка безопасности: если токен просрочен (401/403)
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/auth';
+        return;
+      }
 
-      const updatedData = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Ошибка при обновлении профиля');
+      }
+
+      const updatedUserFromServer = await response.json();
       
-      // Обновляем данные в localStorage
-      const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
-      localStorage.setItem('user', JSON.stringify({ ...savedUser, ...updatedData }));
+      // 6. Синхронизируем локальные данные пользователя
+      const currentLocalUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const newUserData = { ...currentLocalUser, ...updatedUserFromServer };
+      localStorage.setItem('user', JSON.stringify(newUserData));
 
       setStatus('success');
-      setTimeout(() => navigate('/profile'), 1500);
+      
+      // Небольшая задержка перед редиректом, чтобы юзер увидел успех
+      setTimeout(() => {
+        navigate('/profile');
+      }, 1500);
+
     } catch (err) {
       setStatus('error');
-      console.error('Update error:', err);
+      console.error('Update profile error:', err);
     } finally {
       setLoading(false);
     }

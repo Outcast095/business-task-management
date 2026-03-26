@@ -36,16 +36,21 @@ export const useProfile = () => {
 
         const savedUser = JSON.parse(savedUserRaw);
         const userId = savedUser.id;
+        const token = localStorage.getItem('token'); // Получаем токен
 
-        if (!userId) {
+        if (!userId || !token) {
           navigate('/auth');
           return;
         }
 
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
+
         // Запрашиваем данные пользователя и статистику параллельно
         const [userRes, statsRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/auth/me/${userId}`),
-          fetch(`http://localhost:5000/api/tasks/stats/${userId}`)
+          fetch(`http://localhost:5000/api/auth/me/${userId}`, { headers }),
+          fetch(`http://localhost:5000/api/tasks/stats/${userId}`, { headers })
         ]);
 
         if (!userRes.ok || !statsRes.ok) {

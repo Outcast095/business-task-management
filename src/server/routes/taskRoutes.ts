@@ -4,10 +4,25 @@
 import { Router, Request, Response } from 'express';
 import pool from '../database/db.js';
 import { ITask } from '@/shared/types.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
-router.get('/stats/:userId', async (req: Request, res: Response) => {
+// Защищаем все последующие роуты этим middleware
+router.use(authenticateToken);
+
+// Middleware для проверки того, что пользователь обращается к своим данным
+const checkOwnership = (req: Request, res: Response, next: Function) => {
+  const { userId } = req.params;
+  const loggedInUserId = (req as any).user.userId;
+
+  if (userId && Number(userId) !== loggedInUserId) {
+    return res.status(403).json({ error: 'У вас нет прав для доступа к этим данным.' });
+  }
+  next();
+};
+
+router.get('/stats/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const statsQuery = await pool.query(
@@ -26,7 +41,7 @@ router.get('/stats/:userId', async (req: Request, res: Response) => {
 
 // 1. Получение задач КОНКРЕТНОГО пользователя
 // Маршрут теперь: /api/tasks/:userId
-router.get('/:userId', async (req: Request, res: Response) => {
+router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;
@@ -55,7 +70,7 @@ router.get('/:userId', async (req: Request, res: Response) => {
 });
 
 // 2. Добавление задачи для конкретного пользователя
-router.post('/:userId', async (req: Request, res: Response) => {
+router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const { title } = req.body;
@@ -85,14 +100,15 @@ router.patch('/:id', async (
   try {
     const { id } = req.params;
     const { completed } = req.body;
+    const loggedInUserId = (req as any).user.userId;
 
     const updatedTask = await pool.query<ITask>(
-      'UPDATE tasks SET completed = $1 WHERE id = $2 RETURNING *',
-      [completed, id]
+      'UPDATE tasks SET completed = $1 WHERE id = $2 AND user_id = $3 RETURNING *',
+      [completed, id, loggedInUserId]
     );
 
     if (updatedTask.rows.length === 0) {
-      return res.status(404).json({ error: "Задача не найдена" });
+      return res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
     }
 
     res.json(updatedTask.rows[0]);
@@ -108,13 +124,14 @@ router.delete('/:id', async (
 ) => {
   try {
     const { id } = req.params;
+    const loggedInUserId = (req as any).user.userId;
 
-    // Выполняем удаление в БД
-    const result = await pool.query('DELETE FROM tasks WHERE id = $1', [id]);
+    // Выполняем удаление в БД только если задача принадлежит юзеру
+    const result = await pool.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2', [id, loggedInUserId]);
 
     // Проверяем, было ли что-то удалено (rowCount)
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Задача не найдена" });
+      return res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
     }
 
     res.json({ message: "Задача успешно удалена" });
