@@ -1,22 +1,24 @@
 // src/client/styles/_variables.scss
 
+@use './colors' as c;
+
 // 1. Цветовая палитра (Brand Colors)
-$color-blue: #00d2ff;
-$color-blue-glow: rgba(0, 210, 255, 0.4);
-$color-red: #ff5252;
-$color-red-glow: rgba(255, 82, 82, 0.4);
-$color-green: #00e676;
-$color-green-glow: rgba(0, 230, 118, 0.6);
+$color-blue: c.$color-blue;
+$color-blue-glow: c.$color-blue-glow;
+$color-red: c.$color-red;
+$color-red-glow: c.$color-red-glow;
+$color-green: c.$color-green;
+$color-green-glow: c.$color-green-glow;
 
 // 2. Фон и Стеклянные эффекты (Glassmorphism)
-$glass-bg: rgba(255, 255, 255, 0.05);
-$glass-border: rgba(255, 255, 255, 0.1);
+$glass-bg: c.$color-white-alpha-05;
+$glass-border: c.$color-white-alpha-10;
 $glass-blur: blur(12px);
 
 // 3. Текст
-$text-primary: #ffffff;
-$text-secondary: rgba(255, 255, 255, 0.6);
-$text-muted: rgba(255, 255, 255, 0.3);
+$text-primary: c.$color-white;
+$text-secondary: c.$color-white-alpha-60;
+$text-muted: c.$color-white-alpha-30;
 
 // 4. Типографика (Шрифты)
 $font-main: 'Inter', system-ui, -apple-system, sans-serif;

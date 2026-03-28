@@ -3,10 +3,16 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
+@use '../../styles/breakpoints' as bp;
 
 .container {
   @include m.flex-center;
   padding: 104px 20px 40px; // Добавил отступ сверху для хедера, как в TodosPage
+
+  @include bp.mobile {
+    padding: 80px 15px 30px; // Уменьшаем отступ сверху на мобильных
+  }
 }
 
 .editForm {
@@ -24,6 +30,15 @@
     font-size: 1.5rem; 
     color: v.$text-primary;
     font-weight: v.$font-weight-bold;
+
+    @include bp.mobile {
+      font-size: 1.3rem;
+    }
+  }
+
+  @include bp.mobile {
+    padding: 25px 20px;
+    gap: 16px;
   }
 }
 
@@ -35,11 +50,15 @@
   label { 
     font-size: 0.9rem; 
     color: v.$text-secondary; 
+
+    @include bp.mobile {
+      font-size: 0.85rem;
+    }
   }
   
   input {
     padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: c.$color-white-alpha-05;
     border: 1px solid v.$glass-border;
     border-radius: v.$radius-main;
     color: v.$text-primary;
@@ -51,22 +70,39 @@
       @include m.glow(v.$color-blue, 0.2);
     }
   }
+
+  @include bp.mobile {
+    gap: 6px;
+
+    input {
+      padding: 10px;
+    }
+  }
 }
 
-.actions { 
+.actions {
   display: flex; 
   gap: 12px; 
-  margin-top: 10px; 
+  margin-top: 10px;
+
+  @include bp.mobile {
+    flex-direction: column;
+    gap: 10px;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
-.success { 
-  color: v.$color-green; 
-  text-align: center; 
+.success {
+  color: v.$color-green;
+  text-align: center;
   @include m.glow(v.$color-green, 0.3);
 }
 
-.error { 
-  color: v.$color-red; 
-  text-align: center; 
+.error {
+  color: v.$color-red;
+  text-align: center;
   @include m.glow(v.$color-red, 0.3);
 }

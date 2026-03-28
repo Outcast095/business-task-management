@@ -5,6 +5,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .header {
   position: fixed;
@@ -13,7 +14,7 @@
   right: 0;
   z-index: 1000;
   height: 64px; // Фиксированная высота
-  background: rgba(13, 13, 13, 0.7);
+  background: c.$color-bg-header;
   backdrop-filter: blur(12px) saturate(180%);
   border-bottom: 1px solid v.$glass-border;
   @include m.flex-center;
@@ -54,7 +55,7 @@
 
 .nav {
   display: flex;
-  background: rgba(255, 255, 255, 0.04);
+  background: c.$color-white-alpha-04;
   padding: 4px;
   border-radius: 12px;
   border: 1px solid v.$glass-border;
@@ -74,8 +75,8 @@
 
     &.active {
       color: v.$text-primary;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: c.$color-white-alpha-08;
+      box-shadow: 0 4px 12px c.$color-black-alpha-10;
     }
   }
 }
@@ -106,7 +107,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1); // фон для буквы
+  background: c.$color-white-alpha-10; // фон для буквы
   
   .avatarImg {
     width: 100%;

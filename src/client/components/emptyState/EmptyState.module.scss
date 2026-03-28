@@ -3,6 +3,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .container {
   @include m.flex-center;
@@ -22,7 +23,7 @@
   margin-bottom: 15px;
   opacity: 0.5;
   // Небольшое свечение для иконки, чтобы она не была скучной
-  filter: drop-shadow(0 0 8px rgba(v.$text-primary, 0.2));
+  filter: drop-shadow(0 0 8px rgba(c.$color-white, 0.2));
 }
 
 .title {

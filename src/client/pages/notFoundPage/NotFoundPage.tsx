@@ -4,19 +4,15 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../components/button/Button';
+import { Button } from '../../components/button/Button';
+import styles from './NotFoundPage.module.scss';
 
 export const NotFoundPage: React.FC = () => {
   return (
-    <div style={{ 
-      textAlign: 'center', 
-      marginTop: '100px', 
-      color: 'white', 
-      fontFamily: 'sans-serif' 
-    }}>
-      <h1 style={{ fontSize: '120px', margin: '0', color: '#ff4d4d' }}>404</h1>
-      <h2 style={{ marginBottom: '20px' }}>Упс! Страница не найдена</h2>
-      <p style={{ opacity: 0.6, marginBottom: '40px' }}>
+    <div className={styles.container}>
+      <h1 className={styles.code}>404</h1>
+      <h2 className={styles.title}>Упс! Страница не найдена</h2>
+      <p className={styles.description}>
         Похоже, вы забрели в неизведанные цифровые пустоши...
       </p>
       

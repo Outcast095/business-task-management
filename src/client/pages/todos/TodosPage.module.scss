@@ -3,6 +3,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/breakpoints' as bp;
 
 .container {
   max-width: 480px;
@@ -11,10 +12,15 @@
   // Используем твои расчеты: 64px (хедер) + 40px (отступ)
   // Но подставляем переменные, чтобы было гибко
   padding: 104px v.$spacing-md 40px; 
-  
+
   display: flex;
   flex-direction: column;
   gap: 32px; // Зазор между Title, Form и List
+
+  @include bp.mobile {
+    padding: 80px v.$spacing-sm 30px; // Уменьшаем верхний отступ на мобильных
+    gap: 24px;
+  }
 }
 
 .header {
@@ -27,6 +33,13 @@
     color: v.$text-primary;
     @include m.glow(v.$color-blue, 0.2); // Легкое свечение для главного заголовка
   }
+
+  @include bp.mobile {
+    gap: 5px;
+    h1 {
+      font-size: 2rem;
+    }
+  }
 }
 
 .listWrapper {
@@ -37,6 +50,10 @@
   
   // Наша плавная анимация появления
   animation: fadeIn 0.5s ease-out;
+
+  @include bp.mobile {
+    min-height: auto; // На мобильных не нужно фиксированной высоты
+  }
 }
 
 // Выносим анимацию, чтобы она была доступна только здесь

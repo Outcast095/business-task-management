@@ -1,0 +1,45 @@
+// это файл NotFoundPage.module.scss
+// расположен по адресу src/client/pages/NotFoundPage.module.scss
+
+@use '../../styles/colors' as c;
+@use '../../styles/breakpoints' as bp;
+@use '../../styles/variables' as v;
+
+.container {
+  text-align: center;
+  font-family: 'sans-serif'; // Заменяем на системный или общий шрифт
+
+  @include bp.mobile {
+    padding-top: 50px; // Уменьшаем верхний отступ на мобильных
+  }
+}
+
+.code {
+  font-size: 120px;
+  margin: 0;
+  color: c.$color-red;
+
+  @include bp.mobile {
+    font-size: 80px;
+  }
+}
+
+.title {
+  margin-bottom: 20px;
+  color: c.$color-white;
+
+  @include bp.mobile {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+}
+
+.description {
+  opacity: 0.6;
+  margin-bottom: 40px;
+
+  @include bp.mobile {
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+}

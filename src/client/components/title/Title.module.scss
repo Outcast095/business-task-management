@@ -1,4 +1,6 @@
 // Title.module.scss
+@use '../../styles/colors' as c;
+
 .container {
   margin-bottom: 30px;
   text-align: center;
@@ -13,19 +15,19 @@
   line-height: 1.2;
   
   // Градиент оставляем, но делаем его нежнее
-  background: linear-gradient(135deg, #fff 30%, #00d2ff 100%);
+  background: linear-gradient(135deg, c.$color-white 30%, c.$color-blue 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   
   // Тонкое свечение
-  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 10px 20px c.$color-black-alpha-30;
 }
 
 .countBadge {
   margin-top: 8px;
   font-size: 0.75rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4); // Делаем менее заметным
+  color: c.$color-white-alpha-40; // Делаем менее заметным
   text-transform: uppercase;
   letter-spacing: 3px;
   

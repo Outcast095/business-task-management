@@ -3,13 +3,14 @@
 
 @use 'sass:math'; // 1. Добавляем встроенный модуль математики
 @use './variables' as v;
+@use './colors' as c;
 
 // 1. Главный миксин для "Стеклянного эффекта"
 @mixin glass($opacity: 0.05, $blur: 12px, $border-opacity: 0.1) {
-  background: rgba(255, 255, 255, $opacity);
+  background: rgba(c.$color-white, $opacity);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
-  border: 1px solid rgba(255, 255, 255, $border-opacity);
+  border: 1px solid rgba(c.$color-white, $border-opacity);
 }
 
 // 2. Миксин для неонового свечения (Glow)

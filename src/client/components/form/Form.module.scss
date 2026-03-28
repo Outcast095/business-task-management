@@ -3,6 +3,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .form {
   @include m.flex-center;
@@ -13,7 +14,7 @@
   max-width: 600px;
   padding: 20px;
   border-radius: v.$radius-card;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px c.$color-black-alpha-30;
 
   .inputWrapper {
     position: relative;
@@ -26,7 +27,7 @@
     flex: 1;
     width: 100%; 
     padding: 14px 45px 14px 20px;
-    background: rgba(255, 255, 255, 0.05);
+    background: c.$color-white-alpha-05;
     border: 1px solid transparent;
     border-radius: v.$radius-main;
     font-size: 16px;
@@ -40,7 +41,7 @@
     &:focus {
       outline: none;
       border-color: v.$color-blue;
-      background: rgba(255, 255, 255, 0.1);
+      background: c.$color-white-alpha-10;
       @include m.glow(v.$color-blue, 0.2);
     }
   }
@@ -48,7 +49,7 @@
   .addButton {
     padding: 14px 30px;
     background: v.$color-blue;
-    color: #000; // Темный текст на светлом фоне кнопки
+    color: c.$color-black; // Темный текст на светлом фоне кнопки
     border: none;
     border-radius: v.$radius-main;
     font-weight: v.$font-weight-bold;
@@ -85,7 +86,7 @@
 
     &:hover {
       color: v.$color-blue;
-      background: rgba(255, 255, 255, 0.1);
+      background: c.$color-white-alpha-10;
     }
   }
 }

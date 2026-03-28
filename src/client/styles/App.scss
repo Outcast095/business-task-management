@@ -1,19 +1,21 @@
+@use './colors' as c;
+
 // 1. Импорт шрифта всегда сверху
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
 // 2. Глобальные переменные (объявляем ПЕРЕД использованием)
 :root {
-  --bg-main: #1e1e2f;
-  --bg-gradient: radial-gradient(circle at 20% 20%, #4a148c 0%, transparent 40%),
-                  radial-gradient(circle at 80% 80%, #00d2ff 0%, transparent 40%),
-                  #1e1e2f; 
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.15);
+  --bg-main: #{c.$color-bg-main};
+  --bg-gradient: radial-gradient(circle at 20% 20%, #{c.$color-purple} 0%, transparent 40%),
+                  radial-gradient(circle at 80% 80%, #{c.$color-blue} 0%, transparent 40%),
+                  #{c.$color-bg-main}; 
+  --glass-bg: #{c.$color-white-alpha-08};
+  --glass-border: #{c.$color-white-alpha-15};
   --glass-blur: blur(12px);
-  --text-main: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --accent-blue: #00d2ff;
-  --accent-green: #00e676;
+  --text-main: #{c.$color-white};
+  --text-secondary: #{c.$color-white-alpha-70};
+  --accent-blue: #{c.$color-blue};
+  --accent-green: #{c.$color-green};
   --font-main: 'Inter', sans-serif;
 }
 

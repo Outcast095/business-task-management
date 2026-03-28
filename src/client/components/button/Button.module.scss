@@ -3,6 +3,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .glassButton {
   padding: 10px 20px;
@@ -33,7 +34,7 @@
   @include m.glow(v.$color-blue, 0.3);
 
   &:hover {
-    background: rgba(v.$color-blue, 0.2);
+    background: rgba(c.$color-blue, 0.2);
     border-color: v.$color-blue;
     @include m.glow(v.$color-blue, 0.6); // Усиливаем свечение
     color: v.$text-primary;
@@ -45,7 +46,7 @@
   @include m.glow(v.$color-red, 0.2);
 
   &:hover {
-    background: rgba(v.$color-red, 0.15);
+    background: rgba(c.$color-red, 0.15);
     border-color: v.$color-red;
     @include m.glow(v.$color-red, 0.5);
     color: v.$text-primary;

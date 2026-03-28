@@ -4,6 +4,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .paginationWrapper {
   @include m.flex-center;
@@ -29,5 +30,5 @@
   @include m.flex-center;
   font-size: 0.8rem;
   font-weight: v.$font-weight-bold;
-  color: #000;
+  color: c.$color-black;
 }

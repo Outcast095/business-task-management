@@ -1,5 +1,6 @@
 // src/client/components/modal/ModalWrapper.module.scss
 @use "../../styles/mixins.scss" as *;
+@use '../../styles/colors' as c;
 
 .backdrop {
   position: fixed;
@@ -7,7 +8,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: c.$color-black-alpha-60;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,10 +19,10 @@
 
 .modal {
   background: var(--bg-card); // Предполагаю наличие переменных темы
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid c.$color-white-alpha-10;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px c.$color-black-alpha-50;
   position: relative;
   animation: slideUp 0.3s ease;
   
@@ -40,7 +41,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid c.$color-white-alpha-05;
   padding-bottom: 10px;
 }
 

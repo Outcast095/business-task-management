@@ -11,7 +11,7 @@ import { AuthPage } from './pages/auth/AuthPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { EditPage } from './pages/editPage/EditPage';
 import { AboutPage } from './pages/about/AboutPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { NotFoundPage } from './pages/notFoundPage/NotFoundPage';
 import { PrivateRoute, PublicRoute } from './components/authGuards/AuthGuards'; 
 import { MainLayout } from './components/layouts/MainLayout';
 

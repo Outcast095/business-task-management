@@ -3,6 +3,7 @@
 
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/colors' as c;
 
 .checkboxWrapper {
   @include m.flex-center;
@@ -39,12 +40,12 @@
   }
 
   &:hover .customCheck {
-    border-color: rgba(v.$color-green, 0.5);
-    background: rgba(v.$color-green, 0.05);
+    border-color: rgba(c.$color-green, 0.5);
+    background: rgba(c.$color-green, 0.05);
   }
 
   .hiddenInput:checked ~ .customCheck {
-    background: rgba(v.$color-green, 0.1);
+    background: rgba(c.$color-green, 0.1);
     border-color: v.$color-green;
     
     // Используем миксин свечения для галочки
