@@ -6,6 +6,8 @@
 import { Request, Response } from 'express';
 import pool from '../database/db.js';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Контроллер для обновления профиля пользователя.
@@ -74,5 +76,53 @@ export const updateProfile = async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error('Ошибка в updateProfile:', err);
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteProfile = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const { password } = req.body;
+
+  try {
+    // 1. Ищем пользователя, чтобы получить хеш пароля и путь к аватару
+    const userResult = await pool.query(
+      'SELECT password_hash, avatar_url FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    const user = userResult.rows[0];
+
+    // 2. ПРОВЕРКА ПАРОЛЯ (Re-authentication)
+    const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: 'Неверный пароль. Удаление невозможно.' });
+    }
+
+    // 3. УДАЛЕНИЕ АВАТАРА С СЕРВЕРА
+    if (user.avatar_url) {
+      // Извлекаем имя файла из URL (например, из /uploads/123.jpg получаем 123.jpg)
+      const fileName = path.basename(user.avatar_url);
+      const filePath = path.join(process.cwd(), 'public/uploads', fileName);
+
+      // Проверяем, существует ли файл, и удаляем его
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log(`Файл ${fileName} удален при удалении аккаунта`);
+      }
+    }
+
+    // 4. УДАЛЕНИЕ ИЗ БАЗЫ ДАННЫХ
+    // Благодаря ON DELETE CASCADE в вашей схеме, задачи удалятся автоматически
+    await pool.query('DELETE FROM users WHERE id = $1', [userId]);
+
+    res.status(200).json({ message: 'Профиль и все связанные данные успешно удалены' });
+
+  } catch (err: any) {
+    console.error('Ошибка при удалении профиля:', err);
+    res.status(500).json({ error: 'Ошибка сервера при удалении профиля' });
   }
 };

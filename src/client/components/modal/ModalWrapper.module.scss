@@ -1,5 +1,5 @@
 // src/client/components/modal/ModalWrapper.module.scss
-@import "../../styles/mixins.scss"; // Импорт твоих миксинов
+@use "../../styles/mixins.scss" as *;
 
 .backdrop {
   position: fixed;
