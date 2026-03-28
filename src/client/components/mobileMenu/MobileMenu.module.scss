@@ -1,0 +1,109 @@
+// файл /MobileMenu.module.scss
+// файл расположен по адресу src/client/components/mobileMenu/MobileMenu.module.scss
+
+@use '../../styles/variables' as v;
+@use '../../styles/colors' as c;
+@use '../../styles/mixins' as m;
+@use '../../styles/fonts' as f;
+
+.overlay {
+  position: fixed;
+  top: 64px; // Высота твоего хедера
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 64px);
+  background: c.$color-black-alpha-50; // Используем твой полупрозрачный черный
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.menuContent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80%; // На мобилках лучше делать пошире
+  max-width: 320px;
+  height: 100%;
+  background: c.$color-bg-dark-1; // Темный фон из твоих переменных
+  border-left: 1px solid v.$glass-border;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -10px 0 30px c.$color-black-alpha-30;
+
+  .active & {
+    transform: translateX(0);
+  }
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 40px;
+
+  a {
+    color: c.$color-white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: f.$fw-medium; // Используем твой fonts.scss
+    transition: v.$transition-base;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: c.$color-blue; // Твой основной синий
+      padding-left: 8px; // Небольшой эффект при наведении
+    }
+  }
+}
+
+.divider {
+  height: 1px;
+  background: c.$color-white-alpha-10; // Твоя прозрачная линия
+  margin-bottom: 30px;
+}
+
+.userSection {
+  margin-top: auto; // Прижимаем к низу
+  padding: 20px;
+  background: c.$color-white-alpha-05;
+  border-radius: v.$radius-main;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+}
+
+.userName {
+  font-weight: f.$fw-semibold;
+  color: c.$color-white;
+}
+
+.logoutBtn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(c.$color-red, 0.3);
+  color: c.$color-red;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: f.$fw-bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(c.$color-red, 0.1);
+    @include m.glow(c.$color-red, 0.3); // Твой миксин сияния
+  }
+}

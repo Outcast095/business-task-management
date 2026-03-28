@@ -1,17 +1,32 @@
 // компонент Header.tsx
 // расположен по адресу src/client/components/header/Header.tsx
-import React from 'react';
+// src/client/components/header/Header.tsx
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useProfile } from '../../hooks/useProfile';
+import MobileMenu from '../mobileMenu/MobileMenu'; // Импортируем новый компонент
 import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
   const location = useLocation();
-  
-  // Получаем актуальные данные пользователя из хука
   const { user, loading, logout } = useProfile();
+  
+  // Состояние открытия мобильного меню
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Пока данные загружаются, отображаем пустой контейнер или скелетон
+  // Закрываем меню при смене маршрута (страницы)
+  useEffect(() => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = 'unset';
+  }, [location.pathname]);
+
+  // Функция переключения меню с блокировкой скролла
+  const toggleMenu = () => {
+    const newState = !isMenuOpen;
+    setIsMenuOpen(newState);
+    document.body.style.overflow = newState ? 'hidden' : 'unset';
+  };
+
   if (loading && !user) {
     return (
       <header className={styles.header}>
@@ -20,17 +35,18 @@ export const Header: React.FC = () => {
     );
   }
 
-  // Первая буква имени для фоллбэка (если нет фото)
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : '?';
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
+        {/* ЛОГОТИП */}
         <Link to="/" className={styles.logo}>
           <span className={styles.logoDot}></span>
           TODO<span>PRO</span>
         </Link>
 
+        {/* ДЕКСТОПНАЯ НАВИГАЦИЯ (скроем в SCSS на мобилках) */}
         <nav className={styles.nav}>
           <Link 
             to={user ? `/todos/${user.id}` : '/auth'} 
@@ -52,18 +68,16 @@ export const Header: React.FC = () => {
           </Link>
         </nav>
 
+        {/* ДЕКСТОПНАЯ СЕКЦИЯ ПОЛЬЗОВАТЕЛЯ (тоже скроем в SCSS) */}
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <span className={styles.userName}>{user?.name || 'Гость'}</span>
-            
-            {/* Блок аватара: приоритет отдаем загруженному изображению */}
             <div className={styles.avatar}>
               {user?.avatar_url ? (
                 <img 
                   src={user.avatar_url} 
                   alt={user.name} 
                   className={styles.avatarImg}
-                  // Добавляем обработку ошибки, если картинка не загрузится
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                     (e.target as HTMLImageElement).parentElement!.innerText = userInitial;
@@ -74,14 +88,31 @@ export const Header: React.FC = () => {
               )}
             </div>
           </div>
-          
           <div className={styles.divider}></div>
-          
           <button onClick={logout} className={styles.logoutBtn}>
             Выйти
           </button>
         </div>
+
+        {/* КНОПКА БУРГЕРА (появится только на мобилках) */}
+        <button 
+          className={`${styles.burger} ${isMenuOpen ? styles.burgerActive : ''}`} 
+          onClick={toggleMenu}
+          aria-label="Меню"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
+
+      {/* МОБИЛЬНОЕ МЕНЮ (отдельный компонент) */}
+      <MobileMenu 
+        isOpen={isMenuOpen} 
+        onClose={() => setIsMenuOpen(false)} 
+        user={user} 
+        logout={logout} 
+      />
     </header>
   );
 };
