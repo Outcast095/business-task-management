@@ -27,9 +27,6 @@ export const TodosPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-      </header>
-
       <Form onAdd={addTask} />
 
       <div className={styles.listWrapper}>

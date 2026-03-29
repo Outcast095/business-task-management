@@ -1,7 +1,6 @@
 //файл /ProfilePage.tsx
 //файл расположен по адресу src/client/pages/profile/ProfilePage.tsx
 
-// src/client/pages/profile/ProfilePage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

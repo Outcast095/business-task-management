@@ -7,7 +7,7 @@ export const LandingPage: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <header className={styles.hero}>
-        <h1>Управляй задачами как профи</h1>
+        <h1>управляй задачами как профи</h1>
         <p>
           Персональный менеджер задач с серверной пагинацией, 
           высокой производительностью и безопасным хранением данных.
@@ -22,9 +22,6 @@ export const LandingPage: React.FC = () => {
         <div className={styles.actions}>
           <Link to="/auth">
             <Button color="blue">Начать работу</Button>
-          </Link>
-          <Link to="/about">
-            <Button color="gray">Узнать больше</Button>
           </Link>
         </div>
       </header>

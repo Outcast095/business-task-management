@@ -10,12 +10,10 @@
   width: 100%;
   max-width: 600px;
   padding: 16px 24px;
-  margin-bottom: 12px;
   
-  // Эффект Glassmorphism
+  
   background: c.$color-white-alpha-05;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+
   
   // Границы и тени для объема
   border: 1px solid c.$color-white-alpha-10;

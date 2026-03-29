@@ -41,7 +41,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.container}>
         {/* ЛОГОТИП */}
-        <Link to="/" className={styles.logo}>
+        <Link to="/todos" className={styles.logo}>
           <span className={styles.logoDot}></span>
           TODO<span>PRO</span>
         </Link>
