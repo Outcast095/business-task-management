@@ -1,6 +1,7 @@
 //мой файл taskRoutes.ts
 //src/server/routes/taskRoutes.ts
 
+// src/server/routes/taskRoutes.ts
 import { Router, Request, Response } from 'express';
 import pool from '../database/db.js';
 import { ITask } from '@/shared/types.js';
@@ -8,10 +9,9 @@ import { authenticateToken } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
-// Защищаем все последующие роуты этим middleware
 router.use(authenticateToken);
 
-// Middleware для проверки того, что пользователь обращается к своим данным
+// Middleware проверки владельца (оставляем как было)
 const checkOwnership = (req: Request, res: Response, next: Function) => {
   const { userId } = req.params;
   const loggedInUserId = (req as any).user.userId;
@@ -22,6 +22,7 @@ const checkOwnership = (req: Request, res: Response, next: Function) => {
   next();
 };
 
+// Получение статистики
 router.get('/stats/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -39,8 +40,7 @@ router.get('/stats/:userId', checkOwnership, async (req: Request, res: Response)
   }
 });
 
-// 1. Получение задач КОНКРЕТНОГО пользователя
-// Маршрут теперь: /api/tasks/:userId
+// Получение задач пользователя
 router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -48,7 +48,6 @@ router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
     const limit = 6;
     const offset = (page - 1) * limit;
 
-    // Фильтруем по user_id
     const tasksQuery = await pool.query<ITask>(
       'SELECT * FROM tasks WHERE user_id = $1 ORDER BY id DESC LIMIT $2 OFFSET $3',
       [userId, limit, offset]
@@ -69,7 +68,7 @@ router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
   }
 });
 
-// 2. Добавление задачи для конкретного пользователя
+// Остальные роуты (post, patch, delete) оставляем без изменений
 router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -79,7 +78,6 @@ router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Название пустое" });
     }
 
-    // Записываем user_id при создании
     const newTask = await pool.query<ITask>(
       'INSERT INTO tasks (title, user_id) VALUES ($1, $2) RETURNING *',
       [title, userId]
@@ -90,13 +88,7 @@ router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
   }
 });
 
-
-// 3. Обновление статуса
-
-router.patch('/:id', async (
-  req: Request<{ id: string }, {}, { completed: boolean }>,
-  res: Response<ITask | { error: string }>
-) => {
+router.patch('/:id', async (req: Request<{ id: string }, {}, { completed: boolean }>, res: Response) => {
   try {
     const { id } = req.params;
     const { completed } = req.body;
@@ -117,19 +109,13 @@ router.patch('/:id', async (
   }
 });
 
-// 4. Удаление задачи
-router.delete('/:id', async (
-  req: Request<{ id: string }>, 
-  res: Response<{ message: string } | { error: string }>
-) => {
+router.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
     const loggedInUserId = (req as any).user.userId;
 
-    // Выполняем удаление в БД только если задача принадлежит юзеру
     const result = await pool.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2', [id, loggedInUserId]);
 
-    // Проверяем, было ли что-то удалено (rowCount)
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
     }

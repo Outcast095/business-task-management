@@ -1,30 +1,39 @@
 // файл auth.routes.ts
 // расположен по адресу src/server/routes/auth.routes.ts
 
+// src/server/routes/auth.routes.ts
 import { Router } from 'express';
-import { signUp, signIn } from '../controllers/auth.controller.js';
-import pool from '../database/db.js';
+import { 
+  signUp, 
+  signIn, 
+  verifyEmail, 
+  resendVerification 
+} from '../controllers/auth.controller.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
+import pool from '../database/db.js';
 
 const router = Router();
 
+// Публичные роуты
 router.post('/register', signUp);
-router.post('/login', signIn); 
+router.post('/login', signIn);
 
-// ИСПРАВЛЕННЫЙ РОУТ С ЗАЩИТОЙ:
+// Роуты верификации email
+router.get('/verify-email', verifyEmail);
+router.post('/resend-verification', resendVerification);
+
+// Защищённый роут — информация о текущем пользователе
 router.get('/me/:userId', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
     const loggedInUserId = (req as any).user.userId;
 
-    // Проверяем, что юзер запрашивает свои данные
     if (Number(userId) !== loggedInUserId) {
       return res.status(403).json({ error: "У вас нет прав для доступа к этим данным" });
     }
     
-    // Добавили avatar_url в SELECT
     const userQuery = await pool.query(
-      'SELECT id, name, email, avatar_url FROM users WHERE id = $1',
+      'SELECT id, name, email, avatar_url, is_verified, role, is_active FROM users WHERE id = $1',
       [userId]
     );
 
