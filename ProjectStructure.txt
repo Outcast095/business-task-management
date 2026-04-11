@@ -1,96 +1,134 @@
-business-task-management/
-├── config/                                      # Конфигурация Webpack
-│   ├── webpack.common.js                        # Общие настройки (entry, output, resolve и т.д.)
-│   ├── webpack.dev.js                           # Разработка (devServer, source maps, hot reload)
-│   └── webpack.prod.js                          # Продакшен (минификация, оптимизация)
-│
-├── public/                                      # Статические файлы, отдаваемые Express
-│   └── uploads/                                 # Папка для аватарок (создаётся автоматически)
-│
+
+
+
+├── config/
+│   ├── webpack.common.js       # Общие настройки (лоадеры, плагины)
+│   ├── webpack.dev.js          # Настройки для разработки (HMR, Source Maps)
+│   └── webpack.prod.js         # Настройки для продакшена (минификация, оптимизация)
 ├── src/
-│   ├── client/                                  # Frontend — React 19 + TypeScript
-│   │   ├── assets/                              # Изображения, иконки, шрифты
+│   ├── client/
+│   │   ├── api/
+│   │   │   ├── auth.api.ts
+│   │   │   └── task.api.ts
+│   │   ├── assets/
 │   │   │   └── images/
-│   │   │
-│   │   ├── components/                          # Переиспользуемые компоненты
-│   │   │   ├── Auth/
-│   │   │   │   ├── LoginForm.tsx
-│   │   │   │   ├── RegisterForm.tsx
-│   │   │   │   └── ProtectedRoute.tsx
-│   │   │   ├── Layout/
-│   │   │   │   ├── Header.tsx
-│   │   │   │   ├── Sidebar.tsx
-│   │   │   │   └── Footer.tsx
-│   │   │   ├── Task/
-│   │   │   │   ├── TaskCard.tsx
-│   │   │   │   ├── TaskForm.tsx
-│   │   │   │   └── TaskList.tsx
-│   │   │   ├── Profile/
-│   │   │   │   ├── ProfileForm.tsx
-│   │   │   │   └── AvatarUploader.tsx
-│   │   │   └── UI/
-│   │   │       ├── Button.tsx
-│   │   │       ├── Input.tsx
-│   │   │       └── Modal.tsx
-│   │   │
-│   │   ├── pages/                               # Страницы приложения
-│   │   │   ├── Auth/
-│   │   │   │   ├── LoginPage.tsx
-│   │   │   │   └── RegisterPage.tsx
-│   │   │   ├── Dashboard/
-│   │   │   │   └── DashboardPage.tsx
-│   │   │   ├── Tasks/
-│   │   │   │   └── TasksPage.tsx
-│   │   │   ├── Profile/
-│   │   │   │   └── ProfilePage.tsx
-│   │   │   └── VerifyEmailPage.tsx              # Страница подтверждения email (нужно добавить)
-│   │   │
-│   │   ├── hooks/                               # Кастомные React-хуки
+│   │   ├── components/
+│   │   │   ├── authGuards/
+│   │   │   │   └── AuthGuards.tsx
+│   │   │   ├── button/
+│   │   │   │   ├── Button.module.scss
+│   │   │   │   └── Button.tsx
+│   │   │   ├── checkbox/
+│   │   │   │   ├── Checkbox.module.scss
+│   │   │   │   └── Checkbox.tsx
+│   │   │   ├── dragDrop/
+│   │   │   │   ├── DragDrop.module.scss
+│   │   │   │   └── DragDrop.tsx
+│   │   │   ├── emptyState/
+│   │   │   │   ├── EmptyState.module.scss
+│   │   │   │   └── EmptyState.tsx
+│   │   │   ├── form/
+│   │   │   │   ├── Form.module.scss
+│   │   │   │   └── Form.tsx
+│   │   │   ├── header/
+│   │   │   │   ├── Header.module.scss
+│   │   │   │   └── Header.tsx
+│   │   │   ├── layouts/
+│   │   │   │   └── MainLayout.tsx
+│   │   │   ├── mobileMenu/
+│   │   │   │   ├── MobileMenu.module.scss
+│   │   │   │   └── MobileMenu.tsx
+│   │   │   ├── modal/
+│   │   │   │   ├── ModalWrapper.module.scss
+│   │   │   │   └── ModalWrapper.tsx
+│   │   │   ├── pagination/
+│   │   │   │   ├── Pagination.module.scss
+│   │   │   │   └── Pagination.tsx
+│   │   │   ├── skeleton/
+│   │   │   │   ├── Skeleton.module.scss
+│   │   │   │   └── Skeleton.tsx
+│   │   │   ├── task/
+│   │   │   │   ├── Task.module.scss
+│   │   │   │   └── Task.tsx
+│   │   │   └── title/
+│   │   │       ├── Title.module.scss
+│   │   │       └── Title.tsx
+│   │   ├── hooks/
 │   │   │   ├── useAuth.ts
-│   │   │   ├── useTasks.ts
-│   │   │   └── useLocalStorage.ts
-│   │   │
-│   │   ├── utils/                               # Утилиты фронтенда
-│   │   │   ├── api.ts                           # Централизованные запросы к API
-│   │   │   └── formatDate.ts
-│   │   │
-│   │   ├── App.tsx                              # Главный компонент + роутинг
-│   │   ├── main.tsx                             # Точка входа React
-│   │   └── index.html                           # HTML-шаблон
+│   │   │   ├── useDeleteAccount.ts
+│   │   │   ├── useEdit.ts
+│   │   │   ├── useFetchTasks.ts
+│   │   │   ├── useProfile.ts
+│   │   │   └── useTasks.ts
+│   │   ├── pages/
+│   │   │   ├── about/
+│   │   │   │   ├── AboutPage.module.scss
+│   │   │   │   └── AboutPage.tsx
+│   │   │   ├── auth/
+│   │   │   │   ├── AuthPage.module.scss
+│   │   │   │   └── AuthPage.tsx
+│   │   │   ├── editPage/
+│   │   │   │   ├── EditPage.module.scss
+│   │   │   │   └── EditPage.tsx
+│   │   │   ├── landing/
+│   │   │   │   ├── LandingPage.module.scss
+│   │   │   │   └── LandingPage.tsx
+│   │   │   ├── notFoundPage/
+│   │   │   │   ├── NotFoundPage.module.scss
+│   │   │   │   └── NotFoundPage.tsx
+│   │   │   ├── profile/
+│   │   │   │   ├── ProfilePage.module.scss
+│   │   │   │   └── ProfilePage.tsx
+│   │   │   └── todo/
+│   │   │       ├── TodosPage.module.scss
+│   │   │       └── TodosPage.tsx
+│   │   ├── styles/
+│   │   │   ├── App.scss                 # Стили корневого компонента
+│   │   │   ├── _mixins.scss              # Повторяющиеся блоки кода (флекс, текст)
+│   │   │   ├── _variables.scss           # Главные SCSS переменные
+│   │   │   ├── breakpoints.scss          # Медиа-запросы и точки перелома
+│   │   │   ├── colors.scss               # Цветовая палитра проекта
+│   │   │   ├── fonts.scss                # Подключение и настройки шрифтов
+│   │   │   └── global.scss               # Базовые стили (reset, body, и т.д.)
+│   │   ├── App.tsx
+│   │   ├── declarations.d.ts
+│   │   ├── index.html
+│   │   └── index.tsx
 │   │
-│   ├── server/                                  # Backend — Express + TypeScript
-│   │   ├── controllers/                         # Контроллеры (логика запросов)
-│   │   │   ├── auth.controller.ts               # Регистрация, логин, верификация email
-│   │   │   ├── edit.controller.ts               # Обновление и удаление профиля
-│   │   │   └── task.controller.ts               # (если вынесен) или логика в routes
-│   │   │
-│   │   ├── middleware/                          # Middleware
-│   │   │   ├── auth.middleware.ts               # Проверка JWT токена
-│   │   │   └── verified.middleware.ts           # Проверка подтверждённого email
-│   │   │
-│   │   ├── routes/                              # Маршруты API
-│   │   │   ├── auth.routes.ts                   # /register, /login, /verify-email, /resend-verification
-│   │   │   ├── editRoutes.ts                    # /:userId (PUT, DELETE) — профиль
-│   │   │   └── taskRoutes.ts                    # /:userId/tasks — задачи
-│   │   │
-│   │   ├── utils/                               # Вспомогательные функции
-│   │   │   └── email.service.ts                 # Отправка email подтверждения
-│   │   │
-│   │   ├── database/                            # Работа с БД
-│   │   │   ├── db.ts                            # Создание пула подключения к PostgreSQL
-│   │   │   └── init.sql.ts                      # Инициализация таблиц (users, tasks)
-│   │   │
-│   │   └── index.ts                             # Главный файл сервера (app, routes, middleware)
+│   ├── server/
+│   │   ├── controllers/
+│   │   │   ├── auth.controller.ts       # Регистрация, логин, выход
+│   │   │   └── edit.controller.ts       # Логика редактирования данных
+│   │   ├── database/
+│   │   │   ├── db.ts                    # Конфигурация подключения к БД
+│   │   │   └── init.sql.ts              # Скрипты инициализации таблиц
+│   │   ├── middleware/
+│   │   │   ├── auth.middleware.ts       # Проверка JWT токена
+│   │   │   └── verified.middleware.ts   # Проверка подтверждения почты/аккаунта
+│   │   ├── routes/
+│   │   │   ├── auth.routes.ts           # Маршруты для авторизации
+│   │   │   ├── editRoutes.ts            # Маршруты для редактирования профиля
+│   │   │   └── taskRoutes.ts            # Маршруты для управления задачами
+│   │   ├── uploads/
+│   │   │   └── .gitkeep                 # Чтобы папка попала в репозиторий
+│   │   ├── utils/
+│   │   │   └── email.service.ts         # Логика отправки писем (Nodemailer/Resend)
+│   │   └── index.ts
 │   │
-│   └── shared/                                  # Общие типы (используются на фронте и бэке)
-│       └── types.ts                             # ITask, IUser, ApiResponse и др.
+│   ├── shared/
+│   └── env.d.ts
 │
-├── .env.example                                 # Шаблон переменных окружения
+├── .env.example
 ├── .eslintrc.cjs
-├── .prettierrc
 ├── .gitignore
+├── .prettierrc
+├── ProjectStructure.txt
+├── README.md
+├── package-lock.json
 ├── package.json
-├── tsconfig.json
-├── webpack.config.js                            # (если есть в корне)
-├── roadmap.txt                                  # Твой план развития проекта
-└── README.md
+├── roadmap.txt
+└── tsconfig.json
+
+
+
+Современное fullstack-приложение для управления бизнес-задачами и профилем пользователя.

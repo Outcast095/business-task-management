@@ -6,6 +6,7 @@ import pool from './db.js';
 
 const initDB = async (): Promise<void> => {
   const queryText = `
+    -- Таблица пользователей
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
@@ -15,7 +16,7 @@ const initDB = async (): Promise<void> => {
       role VARCHAR(20) DEFAULT 'user',
       is_active BOOLEAN DEFAULT true,
       
-      -- === Новые поля для верификации email ===
+      -- Верификация email
       is_verified BOOLEAN DEFAULT false NOT NULL,
       verification_token TEXT,
       verification_token_expires TIMESTAMPTZ,
@@ -25,6 +26,16 @@ const initDB = async (): Promise<void> => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    -- Таблица Refresh-токенов для безопасных сессий
+    CREATE TABLE IF NOT EXISTS refresh_tokens (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token TEXT NOT NULL UNIQUE,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Таблица задач
     CREATE TABLE IF NOT EXISTS tasks (
       id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
@@ -34,26 +45,28 @@ const initDB = async (): Promise<void> => {
       CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
-    -- Индексы для ускорения поиска (опционально, но полезно)
+    -- Индексы для оптимизации
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users(verification_token);
+    CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
   `;
 
   try {
     await pool.query(queryText);
-    console.log('✅ Структура базы данных готова: таблицы users и tasks проверены');
-    console.log('✅ Добавлены поля: is_verified, verification_token, verification_token_expires');
+    console.log('--- Database Initialization ---');
+    console.log('✅ Tables checked/created: users, refresh_tokens, tasks');
+    console.log('✅ Indexes verified');
+    console.log('-------------------------------');
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error('❌ Ошибка инициализации БД:', err.message);
       
       if (err.message.includes('already exists')) {
-        console.log('ℹ️  Некоторые таблицы или столбцы уже существуют — это нормально.');
+        console.log('ℹ️ Некоторые элементы уже существуют — пропускаем создание.');
       }
     } else {
       console.error('❌ Непредвиденная ошибка при инициализации БД');
     }
-    // Не завершаем процесс, чтобы сервер мог запуститься даже при мелких предупреждениях
   }
 };
 

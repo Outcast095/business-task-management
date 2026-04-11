@@ -1,0 +1,57 @@
+@use "sass:color"; // 1. Обязательно добавляем импорт в самую первую строку
+
+.verifyContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.verifyCard {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+}
+
+.message, .success, .error {
+  font-size: 18px;
+  margin: 20px 0;
+  line-height: 1.5;
+}
+
+.success { color: #22c55e; }
+.error { color: #ef4444; }
+
+.small {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+
+  &:hover {
+    // 2. Заменяем darken на color.adjust. 
+    // Значение -10% делает цвет темнее (уменьшает яркость)
+    color: color.adjust(#007bff, $lightness: -10%); 
+    text-decoration: underline;
+  }
+}

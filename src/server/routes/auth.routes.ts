@@ -7,7 +7,9 @@ import {
   signUp, 
   signIn, 
   verifyEmail, 
-  resendVerification 
+  resendVerification,
+  refresh,
+  logout 
 } from '../controllers/auth.controller.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
 import pool from '../database/db.js';
@@ -17,6 +19,8 @@ const router = Router();
 // Публичные роуты
 router.post('/register', signUp);
 router.post('/login', signIn);
+router.post('/refresh', refresh); // Для обновления access-токена через куки
+router.post('/logout', logout);   // Для очистки кук и БД
 
 // Роуты верификации email
 router.get('/verify-email', verifyEmail);

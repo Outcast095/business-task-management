@@ -1,27 +1,27 @@
-
-
 {
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
-    "moduleResolution": "bundler", // Исправлено: лучше всего подходит для Webpack
-    "allowImportingTsExtensions": true, // Позволяет импортировать .ts файлы (если нужно)
-    "resolveJsonModule": true, // Позволяет делать import data from './data.json'
-    "allowJs": true, // Позволяет смешивать JS и TS файлы в одном проекте
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
-    "isolatedModules": true, 
-    "noEmit": true, // Т.к. за генерацию кода у тебя отвечает Babel, а не TS
+    "isolatedModules": true,
+    "noEmit": true,
     "skipLibCheck": true,
+
+    // Возвращаем baseUrl (он всё ещё нужен для работы paths в TypeScript)
     "baseUrl": ".",
+
     "paths": {
-      "@/*": ["src/*"] // Твои алиасы
+      "@/*": ["src/*"]
     }
   },
   "include": [
-    "src/**/*",         // Это должно покрывать и .ts, и .d.ts файлы
-    "declarations.d.ts" // Или добавь его явно, если он в корне
+    "src/**/*",
+    "declarations.d.ts"
   ]
-  
 }

@@ -36,3 +36,18 @@ Thumbs.db
 
 # Файлы VS Code
 .vscode/
+
+# Секреты
+.env
+.env.local
+
+# Зависимости
+node_modules/
+
+# Сборка
+dist/
+build/
+
+# Логи и мусор
+npm-debug.log*
+.DS_Store

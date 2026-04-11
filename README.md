@@ -1,45 +1,46 @@
 # Business Task Management
 
-Современное fullstack-приложение для управления задачами и профилем пользователя.
+Современное fullstack-приложение для управления бизнес-задачами и профилем пользователя.
 
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
-![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
-![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?logo=webpack&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ## ✨ Основные возможности
 
-- **Регистрация и авторизация** с подтверждением email
-- **Управление задачами** (создание, редактирование, удаление, пагинация)
-- **Личный профиль** с загрузкой и сменой аватара
+- **Полная авторизация** — регистрация, вход, выход
+- **Подтверждение email** через Resend
+- **Личный профиль** с загрузкой и сменой аватара (Multer + Sharp)
+- **Управление задачами** — создание, редактирование, удаление, пагинация
 - **Статистика** по выполненным задачам
-- **Удаление аккаунта** с очисткой всех данных и аватарки
-- Полностью типизированный код на TypeScript (frontend + backend)
+- **Удаление аккаунта** со всеми данными и аватаркой
+- Полностью типизированный код (frontend + backend)
 
-## 🛠 Технологии
+## 🛠 Технологический стек
 
 ### Frontend
 
 - React 19 + TypeScript
 - React Router DOM v7
-- SCSS + PostCSS
-- Webpack 5 (с отдельными dev/prod конфигами)
-- react-dropzone
+- SCSS + PostCSS + clsx
+- Webpack 5 (отдельные конфиги для dev/prod)
+- react-dropzone (для загрузки аватара)
 
 ### Backend
 
 - Express + TypeScript
 - PostgreSQL + pg
 - JWT + bcryptjs
-- Multer + Sharp (обработка изображений)
-- Nodemailer (подтверждение email)
+- Multer + Sharp (обработка и оптимизация изображений)
+- Resend (подтверждение email)
 - Nodemon + ts-node/esm
 
-### Дополнительно
+### Инструменты
 
 - ESLint + Prettier
-- Environment variables
+- Webpack aliases
+- Environment variables (.env)
 
 ## 🚀 Быстрый запуск
 
