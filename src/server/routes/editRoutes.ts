@@ -1,32 +1,32 @@
-// это файл editRoutes.ts
-// расположен по адресу src/server/routes/editRoutes.ts
-
 // src/server/routes/editRoutes.ts
 
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import path from 'path';
-// 1. Добавляем импорт deleteProfile
-import { updateProfile, deleteProfile } from '../controllers/edit.controller.js'; 
+import { updateProfile, deleteProfile } from '../controllers/edit.controller.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
+import { requireVerifiedEmail } from '../middleware/verified.middleware.js';
+import type { RequestUser } from '../../shared/types/auth.js';
 
 const router = Router();
 
-// Защищаем все роуты в этом файле токеном
+// Глобальные middleware для всех роутов редактирования
 router.use(authenticateToken);
+router.use(requireVerifiedEmail);
 
-// Middleware для проверки прав (Ownership)
-const checkOwnership = (req: Request, res: Response, next: Function) => {
-  const { userId } = req.params;
-  const loggedInUserId = (req as any).user.userId;
+// Типизированный middleware проверки владельца
+const checkOwnership = (req: Request, res: Response, next: NextFunction): void => {
+  const user = (req as any).user as RequestUser;
+  const userIdFromParams = req.params.userId;
 
-  if (userId && Number(userId) !== loggedInUserId) {
-    return res.status(403).json({ error: 'У вас нет прав для этого действия.' });
+  if (userIdFromParams && Number(userIdFromParams) !== user.userId) {
+    res.status(403).json({ error: 'У вас нет прав для этого действия.' });
+    return;
   }
   next();
 };
 
-// --- Настройка Multer (оставляем как есть) ---
+// ====================== MULTER CONFIG ======================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'src/server/uploads/'); 
@@ -49,13 +49,21 @@ const upload = multer({
   }
 });
 
-// --- РОУТЫ ---
+// ====================== ROUTES ======================
 
-// 2. Обновление профиля (PUT)
-router.put('/:userId', checkOwnership, upload.single('avatar'), updateProfile); 
+// PUT /api/users/:userId - обновление профиля (с аватаркой)
+router.put(
+  '/:userId', 
+  checkOwnership, 
+  upload.single('avatar'), 
+  updateProfile
+);
 
-// 3. УДАЛЕНИЕ ПРОФИЛЯ (DELETE)
-// Добавляем этот роут для нашего нового функционала
-router.delete('/:userId', checkOwnership, deleteProfile);
+// DELETE /api/users/:userId - удаление профиля
+router.delete(
+  '/:userId', 
+  checkOwnership, 
+  deleteProfile
+);
 
 export default router;

@@ -1,31 +1,35 @@
-//мой файл taskRoutes.ts
-//src/server/routes/taskRoutes.ts
-
 // src/server/routes/taskRoutes.ts
-import { Router, Request, Response } from 'express';
+
+import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../database/db.js';
 import { ITask } from '@/shared/types.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
+import { requireVerifiedEmail } from '../middleware/verified.middleware.js';
+import type { RequestUser } from '../../shared/types/auth.js';
 
 const router = Router();
 
+// Глобальные middleware
 router.use(authenticateToken);
+router.use(requireVerifiedEmail);
 
-// Middleware проверки владельца (оставляем как было)
-const checkOwnership = (req: Request, res: Response, next: Function) => {
-  const { userId } = req.params;
-  const loggedInUserId = (req as any).user.userId;
+// Типизированный middleware проверки владельца
+const checkOwnership = (req: Request, res: Response, next: NextFunction): void => {
+  const user = (req as any).user as RequestUser;
+  const userIdFromParams = req.params.userId;
 
-  if (userId && Number(userId) !== loggedInUserId) {
-    return res.status(403).json({ error: 'У вас нет прав для доступа к этим данным.' });
+  if (userIdFromParams && Number(userIdFromParams) !== user.userId) {
+    res.status(403).json({ error: 'У вас нет прав для доступа к этим данным.' });
+    return;
   }
   next();
 };
 
-// Получение статистики
-router.get('/stats/:userId', checkOwnership, async (req: Request, res: Response) => {
+// ====================== GET STATS ======================
+router.get('/stats/:userId', checkOwnership, async (req: Request<{ userId: string }>, res: Response) => {
   try {
     const { userId } = req.params;
+
     const statsQuery = await pool.query(
       `SELECT 
         COUNT(*)::int as total, 
@@ -40,8 +44,8 @@ router.get('/stats/:userId', checkOwnership, async (req: Request, res: Response)
   }
 });
 
-// Получение задач пользователя
-router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
+// ====================== GET TASKS ======================
+router.get('/:userId', checkOwnership, async (req: Request<{ userId: string }>, res: Response) => {
   try {
     const { userId } = req.params;
     const page = parseInt(req.query.page as string) || 1;
@@ -68,14 +72,15 @@ router.get('/:userId', checkOwnership, async (req: Request, res: Response) => {
   }
 });
 
-// Остальные роуты (post, patch, delete) оставляем без изменений
-router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
+// ====================== CREATE TASK ======================
+router.post('/:userId', checkOwnership, async (req: Request<{ userId: string }, {}, { title: string }>, res: Response) => {
   try {
     const { userId } = req.params;
     const { title } = req.body;
 
     if (!title?.trim()) {
-      return res.status(400).json({ error: "Название пустое" });
+      res.status(400).json({ error: "Название пустое" });
+      return;
     }
 
     const newTask = await pool.query<ITask>(
@@ -88,6 +93,7 @@ router.post('/:userId', checkOwnership, async (req: Request, res: Response) => {
   }
 });
 
+// ====================== TOGGLE TASK ======================
 router.patch('/:id', async (req: Request<{ id: string }, {}, { completed: boolean }>, res: Response) => {
   try {
     const { id } = req.params;
@@ -100,7 +106,8 @@ router.patch('/:id', async (req: Request<{ id: string }, {}, { completed: boolea
     );
 
     if (updatedTask.rows.length === 0) {
-      return res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
+      res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
+      return;
     }
 
     res.json(updatedTask.rows[0]);
@@ -109,15 +116,20 @@ router.patch('/:id', async (req: Request<{ id: string }, {}, { completed: boolea
   }
 });
 
+// ====================== DELETE TASK ======================
 router.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
   try {
     const { id } = req.params;
     const loggedInUserId = (req as any).user.userId;
 
-    const result = await pool.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2', [id, loggedInUserId]);
+    const result = await pool.query(
+      'DELETE FROM tasks WHERE id = $1 AND user_id = $2', 
+      [id, loggedInUserId]
+    );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
+      res.status(404).json({ error: "Задача не найдена или у вас нет прав." });
+      return;
     }
 
     res.json({ message: "Задача успешно удалена" });

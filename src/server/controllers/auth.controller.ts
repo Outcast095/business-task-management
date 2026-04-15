@@ -1,8 +1,4 @@
-// этой файл 'auth.controller.ts
-// расположен по адресу src/server/controllers/auth.controller.ts
 // src/server/controllers/auth.controller.ts
-
-
 
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
@@ -10,20 +6,18 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import pool from '../database/db.js';
 import { sendVerificationEmail } from '../utils/email.service.js';
+import type { User } from '../../shared/types/auth.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
-const ACCESS_TOKEN_EXPIRES = '15m'; // Короткий срок жизни для безопасности
-const REFRESH_TOKEN_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 дней в миллисекундах
+const ACCESS_TOKEN_EXPIRES = '15m';
+const REFRESH_TOKEN_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 
-/**
- * Вспомогательная функция для создания пары токенов и сохранения refresh в БД
- */
+// Вспомогательная функция генерации токенов
 const generateTokens = async (userId: number) => {
   const accessToken = jwt.sign({ userId }, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES });
   const refreshToken = crypto.randomBytes(40).toString('hex');
   const expiresAt = new Date(Date.now() + REFRESH_TOKEN_MAX_AGE);
 
-  // Сохраняем refresh token в базу данных
   await pool.query(
     'INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
     [userId, refreshToken, expiresAt]
@@ -99,10 +93,8 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
       });
     }
 
-    // Генерируем токены
     const { accessToken, refreshToken } = await generateTokens(user.id);
 
-    // Устанавливаем Refresh Token в HttpOnly Cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -112,13 +104,15 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
 
     await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
 
-    // Удаляем чувствительные данные перед отправкой
     const { password_hash, verification_token, verification_token_expires, ...userData } = user;
 
     res.status(200).json({
       success: true,
       message: 'Вход выполнен успешно',
-      data: { token: accessToken, user: userData }
+      data: { 
+        token: accessToken, 
+        user: userData as User 
+      }
     });
   } catch (error) {
     next(error);
@@ -133,7 +127,6 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
   }
 
   try {
-    // Ищем токен в БД и проверяем срок годности
     const result = await pool.query(
       'SELECT user_id FROM refresh_tokens WHERE token = $1 AND expires_at > NOW()',
       [refreshToken]
@@ -145,13 +138,10 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
 
     const userId = result.rows[0].user_id;
 
-    // Удаляем старый refresh token (одноразовое использование для безопасности)
     await pool.query('DELETE FROM refresh_tokens WHERE token = $1', [refreshToken]);
 
-    // Генерируем новую пару
     const { accessToken, refreshToken: newRefreshToken } = await generateTokens(userId);
 
-    // Обновляем куку
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -159,7 +149,19 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
       maxAge: REFRESH_TOKEN_MAX_AGE
     });
 
-    res.json({ success: true, data: { token: accessToken } });
+    const userResult = await pool.query(
+      `SELECT id, name, email, avatar_url, role, is_active, is_verified 
+       FROM users WHERE id = $1`,
+      [userId]
+    );
+
+    res.json({
+      success: true,
+      data: { 
+        token: accessToken,
+        user: userResult.rows[0]
+      }
+    });
   } catch (error) {
     next(error);
   }
